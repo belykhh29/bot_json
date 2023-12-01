@@ -2,7 +2,6 @@ import telebot
 import json
 
 bot = telebot.TeleBot('6370996369:AAEqn8epM8aKiMM9zzAEHYSjOkz0K_PU5nE')
-
 user_data_dict = {}
 
 # Load existing user data from JSON file
@@ -15,8 +14,9 @@ except json.decoder.JSONDecodeError:
     user_data_dict = {}
 
 
-@bot.message_handler(content_types=['text'])
+@bot.message_handler(content_types=['text']
 def start(message):
+    
     starting = message.text
     start_list = ['/start', 'start', 'старт']
 
@@ -30,7 +30,6 @@ def start(message):
         bot.register_next_step_handler(message, welcome)
 
     else:
-
         bot.send_message(message.chat.id, f'ERROR!\n\n Write again /start')
         bot.register_next_step_handler(message, start)
 
@@ -103,18 +102,16 @@ def choice_log_postget(message):
 
 def log_in(message):
     try:
-
         login_choice = message.text
 
         if login_choice in user_data_dict:
-
             user_data = user_data_dict[login_choice]
+            
             # Display user information
             format_data = format_user_data(user_data, message)
             bot.send_message(message.chat.id, "\n{format_data}")
 
         else:
-
             bot.send_message(message.chat.id,
                              "Login not found. Please choose 'GET' to try again or 'POST' to enter your "
                              "information.")
@@ -128,7 +125,6 @@ def log_in(message):
 
 def log_post(message):
     try:
-
         login = message.text.lower()
 
         print(f"DEBUG: log_post - login: {login}")
@@ -141,7 +137,6 @@ def log_post(message):
             bot.register_next_step_handler(message, choice_log_postget)
 
         else:
-
             # Initialize a new user entry
             user_data_dict[login] = {'login': login}
 
@@ -152,7 +147,6 @@ def log_post(message):
             return login
 
     except Exception as e:
-
         print(f"DEBUG: log_post - Exception: {e}")
 
         bot.reply_to(message, f'ERROR: {e}')
@@ -161,17 +155,15 @@ def log_post(message):
 
 def post_first(message, **kwargs):
     try:
-
+        
         first_name = message.text
         login = kwargs.get('login')
+        user_data_dict[login]['first_name'] = first_name
 
         # print(f"DEBUG: post_first - login: {login}")
 
-        user_data_dict[login]['first_name'] = first_name
-
         bot.send_message(message.chat.id, f'Great! Now your first name is {first_name.title()}\n\n Please, let us know '
                                           f'your last name, write it to me')
-
         bot.register_next_step_handler(message, post_last, login=login)
 
     except Exception as e:
@@ -181,14 +173,10 @@ def post_first(message, **kwargs):
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
-
 def post_last(message, **kwargs):
     try:
-
         last_name = message.text
-
         login = kwargs.get('login')
-
         user_data_dict[login]['last_name'] = last_name
 
         bot.send_message(message.chat.id, f'Great! Now your last name is {last_name.title()}\n\n Please, let us '
@@ -223,7 +211,6 @@ def post_country(message, **kwargs):
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
-
 def post_city(message, **kwargs):
     try:
 
@@ -235,7 +222,6 @@ def post_city(message, **kwargs):
                          f"Great! Now your city is {city.title()}\n\n Please, let us know your street "
                          f"and house number, write your street and house number")
         bot.register_next_step_handler(message, post_address, login=login)
-
         return city
 
     except Exception as e:
@@ -266,7 +252,6 @@ def post_address(message, **kwargs):
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
-
 
 def post_index(message, **kwargs):
     try:
@@ -318,13 +303,9 @@ def post_email(message, **kwargs):
 
 def post_phone(message, **kwargs):
     try:
-
         login = kwargs.get('login')
-
         phone_number = message.text.lower()
-
         user_data_dict.setdefault(login, {})
-
         user_data_dict[login]['phone_number'] = message.text
 
         with open('user_data.json', 'w') as file:
@@ -352,9 +333,7 @@ def post_phone(message, **kwargs):
 
 def format_user_data(user_data, message):
     try:
-
         if isinstance(user_data_dict, dict) and user_data_dict:
-
             login = user_data['login']
 
             data = (f'Here\'s your data:\n\n'
@@ -369,11 +348,10 @@ def format_user_data(user_data, message):
                     f'Phone Number: {user_data["phone_number"]}')
 
             bot.send_message(message.chat.id, f'If you want to continue working on the database, write /start again')
-
             return data
         else:
             return "User data not found or invalid."
-
+            
     except Exception as e:
         return f"Error formatting user data: {e}"
 

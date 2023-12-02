@@ -1,4 +1,5 @@
 {
+
   "belykhh_29": {
     "address": "Rotebergsvagen 10C",
     "city": "Stockholm",
@@ -9,7 +10,9 @@
     "login": "belykhh_29",
     "phone_number": "+460737418820",
     "post_code": "192 78"
+
   },
+
   "login": {
     "Address": "address",
     "City": "city",
@@ -20,7 +23,9 @@
     "Login": "login",
     "Phone Number": "phone_number",
     "Post Code": "index"
+
   },
+
   "waleramos": {
     "address": "Kashirskoye Highway 80",
     "city": "Moscow",
@@ -31,5 +36,6 @@
     "login": "waleramos",
     "phone_number": "+79775804465",
     "post_code": "1155669"
+
   }
 }

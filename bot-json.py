@@ -3,17 +3,14 @@ import json
 
 bot = telebot.TeleBot('6370996369:AAEqn8epM8aKiMM9zzAEHYSjOkz0K_PU5nE')
 
-#Create
 user_data_dict = {}
 
 # Load existing user data from JSON file
 try:
     with open('user_data.json', 'r') as file:
         user_data_dict = json.load(file)
-
 except FileNotFoundError:
     user_data_dict = {}
-
 except json.decoder.JSONDecodeError:
     user_data_dict = {}
 
@@ -33,6 +30,7 @@ def start(message):
         bot.register_next_step_handler(message, welcome)
 
     else:
+
         bot.send_message(message.chat.id, f'ERROR!\n\n Write again /start')
         bot.register_next_step_handler(message, start)
 
@@ -68,86 +66,189 @@ def welcome(message):
 
 @bot.message_handler(commands=["POST", "GET", 'post', 'get'])
 def choice_log_postget(message):
+
     users_choice = message.text
-    users_choice_list1 = ['POST', 'post']
     users_choice_list = ['GET', 'get']
+    users_choice_list1 = ['POST', 'post']
 
     if users_choice in users_choice_list:
 
-        give_loginid_markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-        giveloginid_button = telebot.types.KeyboardButton(r'Give permit to take my ID')
+        give_signupid_markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+        givesid_button = telebot.types.KeyboardButton(r'Take my ID as a login')
+        newlogin_button = telebot.types.KeyboardButton(r'Write another login')
 
-        give_loginid_markup.row(giveloginid_button)
+        give_signupid_markup.row(givesid_button, newlogin_button)
 
-        # l_answer = f"Okay! Then give us permit to take your ID:"
-        # bot.send_message(message.chat.id, l_answer, reply_markup=give_loginid_markup)
-        bot.send_message(message.chat.id, f'Write a login for get data')
+        bot.send_message(message.chat.id, f'Choose the option how to get a data:', reply_markup=give_signupid_markup)
 
-        bot.register_next_step_handler(message, log_in)
+        bot.register_next_step_handler(message, new_or_id_get)
 
     elif users_choice in users_choice_list1:
 
         give_signupid_markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-        givesignuplid_button = telebot.types.KeyboardButton(r'Give my ID as a login')
+        givesid_button = telebot.types.KeyboardButton(r'Take my ID as a login')
+        newlogin_button = telebot.types.KeyboardButton(r'Write new login')
 
-        give_signupid_markup.row(givesignuplid_button)
+        give_signupid_markup.row(givesid_button, newlogin_button)
 
-        bot.send_message(message.chat.id, f'Write new login for data')
-        # s_answer = f"Great! For the first, we need to get your Telegram ID to start registering"
-        # bot.send_message(message.chat.id, s_answer, reply_markup=give_signupid_markup)
+        bot.send_message(message.chat.id, f'Choose the option how to post a data into base:',
+                         reply_markup=give_signupid_markup)
 
-        bot.register_next_step_handler(message, log_post)
+        bot.register_next_step_handler(message, new_or_id_post)
 
     else:
-        
         bot.send_message(message.chat.id, 'ERROR: Invalid choice')
         bot.send_message(message.chat.id, 'Please, write again POST or GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
+def new_or_id_post(message):
+    choice_user = message.text.lower()
+    try:
+        if choice_user == 'take my id as a login':
+            # username = message.from_user.username
+            # login = username
+            agree_markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+            agree_button = telebot.types.KeyboardButton(r'✅')
+
+            agree_markup.row(agree_button)
+
+            bot.send_message(message.chat.id, f'Please, press the button for get permission to take your Telegram '
+                                              f'username as a login in our base:', reply_markup=agree_markup)
+            bot.register_next_step_handler(message, log_post)
+
+
+        elif choice_user == 'write new login':
+            bot.send_message(message.chat.id, 'Okay! Then write new login for add a data into our base')
+
+            bot.register_next_step_handler(message, log_post)
+
+        else:
+
+            bot.send_message(message.chat.id, 'ERROR: Invalid choice')
+            bot.send_message(message.chat.id, 'Please, choose the option again')
+            bot.register_next_step_handler(message, choice_log_postget)
+
+
+    except Exception as e:
+        return f"Error: {e}"
+
+
+
+def new_or_id_get(message):
+    choice_user = message.text.lower()
+    try:
+        if choice_user == 'take my id as a login':
+            # username = message.from_user.username
+            # login = username
+            agree_markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+            agree_button = telebot.types.KeyboardButton(r'✅')
+
+            agree_markup.row(agree_button)
+
+            bot.send_message(message.chat.id, f'Please, press the button for get permission to take your Telegram '
+                                              f'username as a login in our base:', reply_markup=agree_markup)
+            bot.register_next_step_handler(message, log_in)
+
+
+        elif choice_user == 'write another login':
+            bot.send_message(message.chat.id, 'Okay! Then write a login for get a data from our base')
+
+            bot.register_next_step_handler(message, log_in)
+
+        else:
+
+            bot.send_message(message.chat.id, 'ERROR: Invalid choice')
+            bot.send_message(message.chat.id, 'Please, choose the option again')
+            bot.register_next_step_handler(message, choice_log_postget)
+
+
+    except Exception as e:
+        return f"Error: {e}"
+
+
 def log_in(message):
     try:
-        
-        login_choice = message.text
-        
-        if login_choice in user_data_dict:
-            
-            user_data = user_data_dict[login_choice]
+
+        login = message.text
+
+        if login in user_data_dict:
+
+            user_data = user_data_dict[login]
             # Display user information
             format_data = format_user_data(user_data, message)
-            
             bot.send_message(message.chat.id, f"\n{format_data}")
-            bot.send_message(message.chat.id, f'If you want to continue working on the database, choose "POST or "GET"')
 
-            bot.register_next_step_handler(message, choice_log_postget)
-            
+        elif login == r"✅":
+
+            username = message.from_user.username
+            login = username
+
+            if login in user_data_dict:
+
+                user_data = user_data_dict[login]
+                # Display user information
+                format_data = format_user_data(user_data, message)
+                bot.send_message(message.chat.id, f"\n{format_data}")
+
+            else:
+
+                bot.send_message(message.chat.id,
+                                 "Login not found. Please choose 'GET' to try again or 'POST' to enter your "
+                                 "information.")
+                bot.register_next_step_handler(message, choice_log_postget)
+
         else:
-            
+
             bot.send_message(message.chat.id,
                              "Login not found. Please choose 'GET' to try again or 'POST' to enter your "
                              "information.")
             bot.register_next_step_handler(message, choice_log_postget)
 
     except Exception as e:
-        
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
+
 def log_post(message):
     try:
-        
+
         login = message.text.lower()
-        #print(f"DEBUG: log_post - login: {login}")
+
+        print(f"DEBUG: log_post - login: {login}")
 
         if login in user_data_dict:
-        # and login in user_data_dict[user_id]):
+            #     and login in user_data_dict[user_id]):
 
             bot.send_message(message.chat.id,
                              "Login already exists. Please choose 'Login' to view or update your information.")
             bot.register_next_step_handler(message, choice_log_postget)
 
+        elif login == r'✅':
+
+            if login in user_data_dict:
+                #     and login in user_data_dict[user_id]):
+
+                bot.send_message(message.chat.id,
+                                 "Login already exists. Please choose 'POST or GET' to view or post your information.")
+                bot.register_next_step_handler(message, choice_log_postget)
+
+            else:
+
+                username = message.from_user.username
+                login = username
+
+                user_data_dict[login] = {'login': login}
+
+                bot.send_message(message.chat.id,
+                                 f"Great! Your login is {login}\n Please, write the first name of user to continue")
+                bot.register_next_step_handler(message, post_first, login=login)
+
+                return login
+
+
         else:
-            
+
             # Initialize a new user entry
             user_data_dict[login] = {'login': login}
 
@@ -158,35 +259,43 @@ def log_post(message):
             return login
 
     except Exception as e:
-        
-        #print(f"DEBUG: log_post - Exception: {e}")
+
+        print(f"DEBUG: log_post - Exception: {e}")
+
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
 def post_first(message, **kwargs):
     try:
-        
+
         first_name = message.text
         login = kwargs.get('login')
-        user_data_dict[login]['first_name'] = first_name
+
         # print(f"DEBUG: post_first - login: {login}")
+
+        user_data_dict[login]['first_name'] = first_name
 
         bot.send_message(message.chat.id, f'Great! Now your first name is {first_name.title()}\n\n Please, let us know '
                                           f'your last name, write it to me')
+
         bot.register_next_step_handler(message, post_last, login=login)
 
     except Exception as e:
-        
         # print(f"DEBUG: post_first - Exception: {e}")
+
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
+
 def post_last(message, **kwargs):
     try:
+
         last_name = message.text
+
         login = kwargs.get('login')
+
         user_data_dict[login]['last_name'] = last_name
 
         bot.send_message(message.chat.id, f'Great! Now your last name is {last_name.title()}\n\n Please, let us '
@@ -195,7 +304,6 @@ def post_last(message, **kwargs):
         bot.register_next_step_handler(message, post_country, login=login)
 
     except Exception as e:
-        
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
@@ -205,7 +313,9 @@ def post_country(message, **kwargs):
     try:
 
         login = kwargs.get('login')
+
         country = message.text.lower()
+
         user_data_dict[login]['country'] = message.text
 
         bot.send_message(message.chat.id,
@@ -216,10 +326,10 @@ def post_country(message, **kwargs):
         return country
 
     except Exception as e:
-        
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
+
 
 def post_city(message, **kwargs):
     try:
@@ -232,11 +342,10 @@ def post_city(message, **kwargs):
                          f"Great! Now your city is {city.title()}\n\n Please, let us know your street "
                          f"and house number, write your street and house number")
         bot.register_next_step_handler(message, post_address, login=login)
-        
+
         return city
 
     except Exception as e:
-        
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
@@ -253,25 +362,28 @@ def post_address(message, **kwargs):
 
         # streetaddress.capitalize()
         bot.send_message(message.chat.id,
-                         f"Great! Now your street and house number is {address.tit} Please, let us memorize your post "
-                         f"code, write it")
+                         f"Great! Now your street and house number is {address.title()}\n"
+                         f"Please, let us memorize your post code, write it")
+
         bot.register_next_step_handler(message, post_index, login=login)
 
         return address
 
     except Exception as e:
-        
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
+
 
 def post_index(message, **kwargs):
     try:
 
         login = kwargs.get('login')
-        # country = kwargs.get('country')
-        # city = kwarg.get('city')
-        # address = kwargs.get('address')
+
+        # login = log_post()
+        # country = post_country()
+        # city = post_city()
+        # address = post_address()
 
         index = message.text.lower()
 
@@ -287,16 +399,18 @@ def post_index(message, **kwargs):
         bot.register_next_step_handler(message, post_email, login=login)
 
     except Exception as e:
-        
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
+
 
 def post_email(message, **kwargs):
     try:
 
         login = kwargs.get('login')
+
         email_address = message.text.lower()
+
         user_data_dict[login]['email_address'] = message.text
 
         bot.send_message(message.chat.id,
@@ -304,17 +418,20 @@ def post_email(message, **kwargs):
         bot.register_next_step_handler(message, post_phone, login=login)
 
     except Exception as e:
-        
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
+
 def post_phone(message, **kwargs):
     try:
-        
+
         login = kwargs.get('login')
+
         phone_number = message.text.lower()
+
         user_data_dict.setdefault(login, {})
+
         user_data_dict[login]['phone_number'] = message.text
 
         with open('user_data.json', 'w') as file:
@@ -324,7 +441,7 @@ def post_phone(message, **kwargs):
 
         bot.send_message(message.chat.id,
                          f'Great! Your phone number is {phone_number}\n\nData successfully saved!')
-        bot.send_messagea(message.chat.id, f"Choose again, POST or GET to continue.")
+        bot.send_message(message.chat.id, f"Choose again, POST or GET to continue.")
         bot.register_next_step_handler(message, choice_log_postget)
 
         # return choice_log_postget
@@ -337,10 +454,14 @@ def post_phone(message, **kwargs):
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
+
+
+
 def format_user_data(user_data, message):
     try:
 
         if isinstance(user_data_dict, dict) and user_data_dict:
+
             login = user_data['login']
 
             data = (f'Here\'s your data:\n\n'
@@ -353,17 +474,14 @@ def format_user_data(user_data, message):
                     f'Post Code: {user_data["post_code"]}\n'
                     f'Email: {user_data["email_address"]}\n'
                     f'Phone Number: {user_data["phone_number"]}')
-            
-            # bot.register_next_step_handler(message, choice_log_postget)
+
+            bot.send_message(message.chat.id, f'If you want to continue working on the database, write /start again')
 
             return data
-        
         else:
-        
             return "User data not found or invalid."
-            
+
     except Exception as e:
-        
         return f"Error formatting user data: {e}"
 
 

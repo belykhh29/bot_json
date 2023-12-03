@@ -1,1 +1,46 @@
-{"belykhh_29": {"address": "Rotebergsvagen 10C", "city": "Stockholm", "country": "Sweden", "email_address": "andrejbelykh11@gmail.com", "first_name": "Andrei", "last_name": "Belykh", "login": "belykhh_29", "phone_number": "+460737418820", "post_code": "192 78"}, "login": {"Address": "address", "City": "city", "Country": "country", "Email": "email_address", "First Name": "first_name", "Last Name": "last_name", "Login": "login", "Phone Number": "phone_number", "Post Code": "index"}, "waleramos": {"address": "Kashirskoye Highway 80", "city": "Moscow", "country": "Russia", "email_address": "waleramoskaleva@ya.ru", "first_name": "valleriia", "last_name": "moskaleva", "login": "waleramos", "phone_number": "+79775804465", "post_code": "1155669"}}
+{
+  "belykhh_29": {
+    "address": "Rotebergsvagen 10C",
+    "city": "Stockholm",
+    "country": "Sweden",
+    "email_address": "andrejbelykh11@gmail.com",
+    "first_name": "Andrei",
+    "last_name": "Belykh",
+    "login": "belykhh_29",
+    "phone_number": "+460737418820",
+    "post_code": "192 78"
+  },
+  "igor_belykh": {
+    "address": "Zeleniy Prospekt 84",
+    "city": "Moscow",
+    "country": "Russia",
+    "email_address": "igor.belykh@gmail.com",
+    "first_name": "Igor",
+    "last_name": "Belykh",
+    "login": "igor_belykh",
+    "phone_number": "+79778277836",
+    "post_code": "115569"
+  },
+  "login": {
+    "Address": "address",
+    "City": "city",
+    "Country": "country",
+    "Email": "email_address",
+    "First Name": "first_name",
+    "Last Name": "last_name",
+    "Login": "login",
+    "Phone Number": "phone_number",
+    "Post Code": "index"
+  },
+  "waleramos": {
+    "address": "Kashirskoye Highway 80",
+    "city": "Moscow",
+    "country": "Russia",
+    "email_address": "waleramoskaleva@ya.ru",
+    "first_name": "valleriia",
+    "last_name": "moskaleva",
+    "login": "waleramos",
+    "phone_number": "+79775804465",
+    "post_code": "1155669"
+  }
+}

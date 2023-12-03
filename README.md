@@ -7,6 +7,8 @@ THIS IS TECHNICAL TASK, INTO PORTFOLIO
 
 This Telegram bot serves as a simple user database manager, allowing users to store, retrieve, update, and delete their personal information in a persistent storage (in this case, a JSON file).
 
+You can try this bot through the link: https://t.me/Pdata_base_bot
+
 ## Features
 
 1. **User Data Management:**
@@ -77,3 +79,8 @@ This Telegram bot serves as a simple user database manager, allowing users to st
 
    ```bash
    git clone https://github.com/belykhh29/bot_json.git
+
+2. Try our bot
+
+Go through the link and try to use our bot
+   https://t.me/Pdata_base_bot

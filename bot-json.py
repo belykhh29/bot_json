@@ -764,7 +764,7 @@ def log_in(message):
 
             else:
 
-                bot.send_message(message.chat.id,f"Login {login} wasn't found.")
+                bot.send_message(message.chat.id, f"Login {login} wasn't found.")
                 bot.send_message(message.chat.id, "Please choose 'GET' to try again, 'POST' to enter your "
                                  "information or 'UPDATE' to change information in login's base.")
 

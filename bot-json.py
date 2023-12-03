@@ -49,9 +49,10 @@ def welcome(message):
         l_button = telebot.types.KeyboardButton("POST")
         s_button = telebot.types.KeyboardButton("GET")
         u_button = telebot.types.KeyboardButton('UPDATE')
+        d_button = telebot.types.KeyboardButton("DELETE")
 
         choice_markup.row(l_button, s_button)
-        choice_markup.row(u_button)
+        choice_markup.row(u_button, d_button)
 
         bot.send_message(message.chat.id, "Please, choose the action:", reply_markup=choice_markup)
 
@@ -68,12 +69,18 @@ def welcome(message):
         bot.register_next_step_handler(message, welcome)
 
 
-@bot.message_handler(commands=["POST", "GET", 'post', 'get'])
+users_choice_list0 = ["POST", "GET", 'post', 'get', 'DELETE', 'UPDATE', 'Delete', 'Update', 'delete', 'update', 'Post',
+                      'Get']
+
+
+@bot.message_handler(commands=["POST", "GET", 'post', 'get', 'DELETE', 'UPDATE', 'Delete', 'Update', 'delete', 'update', 'Post', 'Get'])
 def choice_log_postget(message):
     users_choice = message.text
+
     users_choice_list = ['GET', 'get', 'Get']
     users_choice_list1 = ['POST', 'post', 'Post']
     user_choice_list2 = ['UPDATE', 'Update', 'update']
+    user_choice_list3 = ['DELETE', 'Delete', 'delete']
 
     if users_choice in users_choice_list:
 
@@ -113,11 +120,23 @@ def choice_log_postget(message):
 
         bot.register_next_step_handler(message, new_or_id_update)
 
+    elif users_choice in user_choice_list3:
+
+        give_signupid_markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+        givesid_button = telebot.types.KeyboardButton(r'Take my ID as a login')
+        newlogin_button = telebot.types.KeyboardButton(r'Write another login')
+
+        give_signupid_markup.row(givesid_button, newlogin_button)
+
+        bot.send_message(message.chat.id, f'Choose the option how to delete a data:',
+                         reply_markup=give_signupid_markup)
+
+        bot.register_next_step_handler(message, new_or_id_del)
+
     else:
         bot.send_message(message.chat.id, 'ERROR: Invalid choice')
-        bot.send_message(message.chat.id, 'Please, write again POST or GET')
+        bot.send_message(message.chat.id, 'Please, write again POST or GET or UPDATE or DELETE')
         bot.register_next_step_handler(message, choice_log_postget)
-
 
 def new_or_id_post(message):
     choice_user = message.text.lower()
@@ -144,12 +163,11 @@ def new_or_id_post(message):
 
             bot.send_message(message.chat.id, 'ERROR: Invalid choice')
             bot.send_message(message.chat.id, 'Please, choose the option again')
-            bot.register_next_step_handler(message, choice_log_postget)
+            bot.register_next_step_handler(message, new_or_id_post)
 
 
     except Exception as e:
         return f"Error: {e}"
-
 
 def new_or_id_get(message):
     choice_user = message.text.lower()
@@ -176,12 +194,11 @@ def new_or_id_get(message):
 
             bot.send_message(message.chat.id, 'ERROR: Invalid choice')
             bot.send_message(message.chat.id, 'Please, choose the option again')
-            bot.register_next_step_handler(message, choice_log_postget)
+            bot.register_next_step_handler(message, new_or_id_get)
 
 
     except Exception as e:
         return f"Error: {e}"
-
 
 def new_or_id_update(message):
     choice_user = message.text.lower()
@@ -208,11 +225,123 @@ def new_or_id_update(message):
 
             bot.send_message(message.chat.id, 'ERROR: Invalid choice')
             bot.send_message(message.chat.id, 'Please, choose the option again')
+            bot.register_next_step_handler(message, new_or_id_update)
+
+
+    except Exception as e:
+        return f"Error: {e}"
+
+def new_or_id_del(message):
+    choice_user = message.text.lower()
+
+    try:
+        if choice_user == 'take my id as a login':
+            # username = message.from_user.username
+            # login = username
+            agree_markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+            agree_button = telebot.types.KeyboardButton(r'✅')
+
+            agree_markup.row(agree_button)
+
+            bot.send_message(message.chat.id, f'Please, press the button for get permission to take your Telegram '
+                                              f'username as a login in our base:', reply_markup=agree_markup)
+            bot.register_next_step_handler(message, start_delete_process)
+
+
+        elif choice_user == 'write another login':
+            bot.send_message(message.chat.id, 'Okay! Then write a login to delete a data from our base')
+
+            bot.register_next_step_handler(message, start_delete_process)
+
+        else:
+
+            bot.send_message(message.chat.id, 'ERROR: Invalid choice')
+            bot.send_message(message.chat.id, 'Please, choose the option again')
             bot.register_next_step_handler(message, choice_log_postget)
 
 
     except Exception as e:
         return f"Error: {e}"
+
+
+def start_delete_process(message):
+    try:
+        login = message.text
+
+        if login in user_data_dict:
+
+            if login in user_data_dict:
+
+                user_data = user_data_dict[login]
+                # Display user information
+                format_data = format_user_data(user_data)
+
+                delete_data_markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+                yes_button = telebot.types.KeyboardButton(r'Yes')
+                no_button = telebot.types.KeyboardButton(r'No')
+
+                delete_data_markup.row(yes_button, no_button)
+
+                bot.send_message(message.chat.id,
+                                 f"Here's {login}'s data:\n\n{format_data}\n\nDo you really want to delete this data?")
+                bot.send_message(message.chat.id,
+                                 f'Choose the option: Y/N, Yes/No', reply_markup=delete_data_markup)
+
+                bot.register_next_step_handler(message, delete_user_data, login=login)
+
+            else:
+
+                bot.send_message(message.chat.id,
+                                 f"Login {login} wasn't found. Please choose 'GET' to try again, 'POST' to enter your "
+                                 "information or 'UPDATE' to change information in login's base or 'DELETE' to delete data")
+                bot.register_next_step_handler(message, choice_log_postget)
+
+
+        elif login == r"✅":
+
+            username = message.from_user.username
+            login = username
+
+            if login in user_data_dict:
+
+                user_data = user_data_dict[login]
+                # Display user information
+                format_data = format_user_data(user_data)
+
+                delete_data_markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+                yes_button = telebot.types.KeyboardButton(r'Yes')
+                no_button = telebot.types.KeyboardButton(r'No')
+
+                delete_data_markup.row(yes_button, no_button)
+
+                bot.send_message(message.chat.id,
+                                 f"Here's {login}'s data:\n\n{format_data}\n\nDo you really want to delete this data?")
+                bot.send_message(message.chat.id,
+                                 f'Choose the option: Y/N, Yes/No', reply_markup=delete_data_markup)
+
+                bot.register_next_step_handler(message, delete_user_data, login=login)
+
+            else:
+
+                bot.send_message(message.chat.id, f"Your login {login} not found")
+                bot.send_message(message.chat.id, f"Please choose 'GET' to try again, 'POST' to enter your "
+                                                  "information or 'UPDATE' to change information in login's base or 'DELETE' to delete data")
+
+                bot.register_next_step_handler(message, choice_log_postget)
+
+        else:
+
+            bot.send_message(message.chat.id,
+                             f"Login {login} wasn't found. Please choose 'GET' to try again, 'POST' to enter your "
+                             "information or 'UPDATE' to change information in login's base.")
+            bot.register_next_step_handler(message, choice_log_postget)
+
+    except Exception as e:
+
+        bot.reply_to(message, f'ERROR: {e}')
+        bot.send_message(message.chat.id, f'Please, choose again: “POST”, “GET", "UPDATE", "DELETE" to continue')
+
+        bot.register_next_step_handler(message, choice_log_postget)
 
 
 def update_info(message):
@@ -372,7 +501,6 @@ def update_key1(message, **kwargs):
         bot.send_message(message.chat.id, f'Please, try again and choose "POST" or "GET" or "UPDATE"')
         bot.register_next_step_handler(message, choice_log_postget)
 
-
 def update_key2(message, **kwargs):
     key_update = message.text
     login = kwargs.get('login')
@@ -404,7 +532,6 @@ def update_key2(message, **kwargs):
         bot.send_message(message.chat.id, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, try again and choose "POST" or "GET" or "UPDATE"')
         bot.register_next_step_handler(message, choice_log_postget)
-
 
 def update_key3(message, **kwargs):
     global format_data
@@ -439,7 +566,6 @@ def update_key3(message, **kwargs):
         bot.send_message(message.chat.id, f'Please, try again and choose "POST" or "GET" or "UPDATE"')
         bot.register_next_step_handler(message, choice_log_postget)
 
-
 def update_key4(message, **kwargs):
     global format_data
     key_update = message.text
@@ -473,7 +599,6 @@ def update_key4(message, **kwargs):
         bot.send_message(message.chat.id, f'Please, try again and choose "POST" or "GET" or "UPDATE"')
         bot.register_next_step_handler(message, choice_log_postget)
 
-
 def update_key5(message, **kwargs):
     global format_data
     key_update = message.text
@@ -505,7 +630,6 @@ def update_key5(message, **kwargs):
         bot.send_message(message.chat.id, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, try again and choose "POST" or "GET" or "UPDATE"')
         bot.register_next_step_handler(message, choice_log_postget)
-
 
 def update_key6(message, **kwargs):
     global format_data
@@ -540,7 +664,6 @@ def update_key6(message, **kwargs):
         bot.send_message(message.chat.id, f'Please, try again and choose "POST" or "GET" or "UPDATE"')
         bot.register_next_step_handler(message, choice_log_postget)
 
-
 def update_key7(message, **kwargs):
     global format_data
     key_update = message.text
@@ -573,7 +696,6 @@ def update_key7(message, **kwargs):
         bot.send_message(message.chat.id, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, try again and choose "POST" or "GET" or "UPDATE"')
         bot.register_next_step_handler(message, choice_log_postget)
-
 
 def update_key8(message, **kwargs):
     global format_data
@@ -610,7 +732,6 @@ def update_key8(message, **kwargs):
 
 
 def log_in(message):
-
     try:
         login = message.text
 
@@ -622,7 +743,7 @@ def log_in(message):
 
             bot.send_message(message.chat.id, f"Here's {login}'s data:\n\n{format_data}")
             bot.send_message(message.chat.id,
-                             f'If you want to continue working on our base, write POST or GET or UPDATE')
+                             f'If you want to continue working on our base, write POST or GET or UPDATE or DELETE')
             bot.register_next_step_handler(message, choice_log_postget)
 
         elif login == r"✅":
@@ -637,15 +758,16 @@ def log_in(message):
                 format_data = format_user_data(user_data)
                 bot.send_message(message.chat.id, f"Here's yours, {login}, data:{format_data}")
                 bot.send_message(message.chat.id,
-                                 f"If you want to continue working on our base, write POST or GET or UPDATE")
+                                 f"If you want to continue working on our base, write POST or GET or UPDATE or DELETE")
 
                 bot.register_next_step_handler(message, choice_log_postget)
 
             else:
 
-                bot.send_message(message.chat.id,
-                                 f"Login {login} wasn't found. Please choose 'GET' to try again, 'POST' to enter your "
+                bot.send_message(message.chat.id,f"Login {login} wasn't found.")
+                bot.send_message(message.chat.id, "Please choose 'GET' to try again, 'POST' to enter your "
                                  "information or 'UPDATE' to change information in login's base.")
+
                 bot.register_next_step_handler(message, choice_log_postget)
 
         else:
@@ -671,7 +793,7 @@ def log_post(message):
             #     and login in user_data_dict[user_id]):
 
             bot.send_message(message.chat.id,
-                             "Login already exists. Please choose 'Login' to view or update your information.")
+                             "Login already exists. Please choose 'POST, GET, UPDATE, DELETE' to continue working with data.")
             bot.register_next_step_handler(message, choice_log_postget)
 
         elif login == r'✅':
@@ -680,7 +802,7 @@ def log_post(message):
                 #     and login in user_data_dict[user_id]):
 
                 bot.send_message(message.chat.id,
-                                 "Login already exists. Please choose 'POST or GET' to view or post your information.")
+                                 "Login already exists. Please choose 'POST, GET, UPDATE, DELETE' to continue working with data.")
                 bot.register_next_step_handler(message, choice_log_postget)
 
             else:
@@ -710,7 +832,7 @@ def log_post(message):
         # print(f"DEBUG: log_post - Exception: {e}")
 
         bot.reply_to(message, f'ERROR: {e}')
-        bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET" or "UPDATE" ')
+        bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET" or "UPDATE" or "DELETE" ')
         bot.register_next_step_handler(message, choice_log_postget)
 
 
@@ -901,6 +1023,51 @@ def post_phone(message, **kwargs):
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
+
+
+def delete_user_data(message, **kwargs):
+    try:
+        login_to_delete = kwargs.get('login')
+
+        users_choice = message.text
+
+        if users_choice == 'Yes':
+
+            # Проверка наличия логина в базе данных
+            # if login_to_delete in user_data_dict:
+            del user_data_dict[login_to_delete]
+
+            # Сохранение обновленной JSON-информации
+            with open('user_data.json', 'w') as file:
+                json.dump(user_data_dict, file)
+
+            bot.send_message(message.chat.id, f"User data for login '{login_to_delete}' has been deleted.")
+            bot.send_message(message.chat.id, "Come back with commands: /start, POST, GET, UPDATE, DELETE")
+
+            bot.register_next_step_handler(message, choice_log_postget)
+
+
+        elif users_choice == 'No':
+
+            bot.send_message(message.chat.id, f'Okay! Let me know if you want to delete the data')
+            bot.send_message(message.chat.id,
+                             f"Please, write the \"POST\", \"GET\", \"UPDATE\" or \"DELETE\" to continue working with me")
+
+            bot.register_next_step_handler(message, choice_log_postget)
+
+        else:
+
+            bot.send_message(message.chat.id, f'ERROR: Incorrect choice, please choose "Yes" or "No" to continue.')
+            bot.send_message(message.chat.id, "Please try again or check the login.")
+
+            bot.register_next_step_handler(message, start_delete_process)
+
+    except Exception as e:
+
+        bot.send_message(message.chat.id, f"ERROR: {e}")
+        bot.send_message(message.chat.id, "Please, try again with commands: /start, POST, GET, UPDATE, DELETE")
+
+        bot.register_next_step_handler(message, start_delete_process)
 
 
 def format_user_data(user_data):

@@ -67,12 +67,12 @@ This Telegram bot serves as a simple user database manager, allowing users to st
 
 ## Requirements
 
-- Python 3.x
-- Python-Telegram-Bot library (`python-telegram-bot`)
+- Python 3.10
+- Python-Telegram-Bot library (`pyTelegramBotAPI`)
 
 ## Installation
 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/telegram-user-database-bot.git
+   git clone https://github.com/belykhh29/bot_json.git

@@ -224,7 +224,7 @@ def update_info(message):
 
             user_data = user_data_dict[login]
             # Display user information
-            format_data = format_user_data(user_data, message)
+            format_data = format_user_data(user_data)
 
             bot.send_message(message.chat.id, f"\n{format_data}")
             bot.send_message(message.chat.id,
@@ -241,7 +241,7 @@ def update_info(message):
 
                 user_data = user_data_dict[login]
                 # Display user information
-                format_data = format_user_data(user_data, message)
+                format_data = format_user_data(user_data)
 
                 bot.send_message(message.chat.id, f"\n{format_data}")
                 bot.send_message(message.chat.id,
@@ -359,7 +359,7 @@ def update_key1(message, **kwargs):
 
             user_data = user_data_dict[login]
             # Display user information
-            format_data = format_user_data(user_data, message)
+            format_data = format_user_data(user_data)
 
         bot.send_message(message.chat.id,
                          f'Great! Now your first name is {key_update}\n\nHere\'s your new info:{format_data}')
@@ -392,7 +392,7 @@ def update_key2(message, **kwargs):
 
             user_data = user_data_dict[login]
             # Display user information
-            format_data = format_user_data(user_data, message)
+            format_data = format_user_data(user_data)
 
             bot.send_message(message.chat.id,
                              f'Great! Now your last name is {key_update}\n\nHere\'s your new info:{format_data}')
@@ -426,7 +426,7 @@ def update_key3(message, **kwargs):
 
             user_data = user_data_dict[login]
             # Display user information
-            format_data = format_user_data(user_data, message)
+            format_data = format_user_data(user_data)
 
         bot.send_message(message.chat.id,
                          f'Great! Now your country is {key_update}\n\nHere\'s your new info {format_data}')
@@ -460,7 +460,7 @@ def update_key4(message, **kwargs):
 
             user_data = user_data_dict[login]
             # Display user information
-            format_data = format_user_data(user_data, message)
+            format_data = format_user_data(user_data)
 
         bot.send_message(message.chat.id,
                          f'Great! Now your city is {key_update}\n\nHere\'s your new info:{format_data}')
@@ -494,7 +494,7 @@ def update_key5(message, **kwargs):
 
             user_data = user_data_dict[login]
             # Display user information
-            format_data = format_user_data(user_data, message)
+            format_data = format_user_data(user_data)
 
         bot.send_message(message.chat.id,
                          f"Great! Now your address is {key_update}\n\nHere's your new info:{format_data}")
@@ -527,7 +527,7 @@ def update_key6(message, **kwargs):
 
             user_data = user_data_dict[login]
             # Display user information
-            format_data = format_user_data(user_data, message)
+            format_data = format_user_data(user_data)
 
         bot.send_message(f"Great! Now your postcode is {key_update}\n\nHere's your new data:{format_data}",
                          message.chat.id)
@@ -561,7 +561,7 @@ def update_key7(message, **kwargs):
 
             user_data = user_data_dict[login]
             # Display user information
-            format_data = format_user_data(user_data, message)
+            format_data = format_user_data(user_data)
 
         bot.send_message(message.chat.id,
                          f"Great! Now your email is {key_update}\n\nHere's your new info:{format_data}")
@@ -595,7 +595,7 @@ def update_key8(message, **kwargs):
 
             user_data = user_data_dict[login]
             # Display user information
-            format_data = format_user_data(user_data, message)
+            format_data = format_user_data(user_data)
 
         bot.send_message(message.chat.id,
                          f"Great! Now your phone number is {key_update}\n\nHere's your new info:{format_data}")
@@ -618,7 +618,7 @@ def log_in(message):
 
             user_data = user_data_dict[login]
             # Display user information
-            format_data = format_user_data(user_data, message)
+            format_data = format_user_data(user_data)
 
             bot.send_message(message.chat.id, f"Here's {login}'s data:\n\n{format_data}")
             bot.send_message(message.chat.id,
@@ -634,8 +634,8 @@ def log_in(message):
 
                 user_data = user_data_dict[login]
                 # Display user information
-                format_data = format_user_data(user_data, message)
-                bot.send_message(message.chat.id, f"Here's your,{login}, data:\n\n{format_data}")
+                format_data = format_user_data(user_data)
+                bot.send_message(message.chat.id, f"Here's yours, {login}, data:{format_data}")
                 bot.send_message(message.chat.id,
                                  f"If you want to continue working on our base, write POST or GET or UPDATE")
 

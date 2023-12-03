@@ -911,15 +911,15 @@ def format_user_data(user_data):
             login = user_data['login']
 
             data = (f'\n\n'
-                    f'Login: {login}\n'
-                    f'First Name: {user_data["first_name"]}\n'
-                    f'Last Name: {user_data["last_name"]}\n'
-                    f'Country: {user_data["country"]}\n'
-                    f'City: {user_data["city"]}\n'
-                    f'Address: {user_data["address"]}\n'
-                    f'Post Code: {user_data["post_code"]}\n'
-                    f'Email: {user_data["email_address"]}\n'
-                    f'Phone Number: {user_data["phone_number"]}')
+                    f'Login: {login}\n\n'
+                    f'1. First Name: {user_data["first_name"]}\n'
+                    f'2. Last Name: {user_data["last_name"]}\n'
+                    f'3. Country: {user_data["country"]}\n'
+                    f'4. City: {user_data["city"]}\n'
+                    f'5. Address: {user_data["address"]}\n'
+                    f'6. Post Code: {user_data["post_code"]}\n'
+                    f'7. Email: {user_data["email_address"]}\n'
+                    f'8. Phone Number: {user_data["phone_number"]}')
 
             # bot.send_message(message.chat.id, f'If you want to continue working on the database, write /start again')
             return data

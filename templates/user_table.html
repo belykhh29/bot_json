@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Data</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>User Data</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Login</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Country</th>
+                <th>City</th>
+                <th>Address</th>
+                <th>Post Code</th>
+                <th>Email Address</th>
+                <th>Phone Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Здесь вы можете использовать шаблонизацию, например, Jinja2, если у вас есть бэкенд -->
+            {% for user in user_data %}
+                <tr>
+                    <td>{{ user.login }}</td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ user.last_name }}</td>
+                    <td>{{ user.country }}</td>
+                    <td>{{ user.city }}</td>
+                    <td>{{ user.address }}</td>
+                    <td>{{ user.post_code }}</td>
+                    <td>{{ user.email_address }}</td>
+                    <td>{{ user.phone_number }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

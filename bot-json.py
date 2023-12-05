@@ -69,7 +69,6 @@ def welcome(message):
         bot.register_next_step_handler(message, welcome)
 
 
-
 @bot.message_handler(commands=["POST", "GET", 'post', 'get', 'DELETE', 'UPDATE', 'Delete', 'Update', 'delete', 'update', 'Post', 'Get'])
 def choice_log_postget(message):
     users_choice = message.text

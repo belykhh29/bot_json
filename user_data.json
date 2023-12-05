@@ -1,1 +1,68 @@
-{"belykhh_29": {"address": "Rotebergsvagen 10C", "city": "Stockholm", "country": "Sweden", "email_address": "andrejbelykh11@gmail.com", "first_name": "Andrei", "last_name": "Belykh", "login": "belykhh_29", "phone_number": "+460737418820", "post_code": "192 78"}, "igor_belykh": {"address": "Zeleniy Prospekt 84", "city": "Moscow", "country": "Russia", "email_address": "igor.belykh@gmail.com", "first_name": "Igor", "last_name": "Belykh", "login": "igor_belykh", "phone_number": "+79778277836", "post_code": "115569"}, "login": {"Address": "address", "City": "city", "Country": "country", "Email": "email_address", "First Name": "first_name", "Last Name": "last_name", "Login": "login", "Phone Number": "phone_number", "Post Code": "index"}, "waleramos": {"address": "Kashirskoye Highway 80", "city": "Moscow", "country": "Russia", "email_address": "waleramoskaleva@ya.ru", "first_name": "valleriia", "last_name": "moskaleva", "login": "waleramos", "phone_number": "+79775804465", "post_code": "1155669"}, "kekcheburek": {"login": "kekcheburek", "first_name": "Andre", "last_name": "Lox", "country": "Didoodkd16", "city": "IDisks", "address": "Eiiekj", "post_code": "17718", "email_address": "Jdkdidkkd@yahoo.com", "phone_number": "2882737383"}}
+{
+  "belykhh_29" : {
+    "address" : "Rotebergsvagen 10C" ,
+    "city" : "Stockholm" ,
+    "country" : "Sweden" ,
+    "email_address" : "andrejbelykh11@gmail.com" ,
+    "first_name" : "Andrei" ,
+    "last_name" : "Belykh" ,
+    "login" : "belykhh_29" ,
+    "phone_number" : "+460737418820" ,
+    "post_code" : "192 78"
+  } ,
+  "igor_belykh" : {
+    "address" : "Zeleniy Prospekt 84" ,
+    "city" : "Moscow" ,
+    "country" : "Russia" ,
+    "email_address" : "igor.belykh@gmail.com" ,
+    "first_name" : "Igor" ,
+    "last_name" : "Belykh" ,
+    "login" : "igor_belykh" ,
+    "phone_number" : "+79778277836" ,
+    "post_code" : "115569"
+  } ,
+  "kekcheburek" : {
+    "address" : "Eiiekj" ,
+    "city" : "IDisks" ,
+    "country" : "Didoodkd16" ,
+    "email_address" : "Jdkdidkkd@yahoo.com" ,
+    "first_name" : "Andre" ,
+    "last_name" : "Lox" ,
+    "login" : "kekcheburek" ,
+    "phone_number" : "2882737383" ,
+    "post_code" : "17718"
+  } ,
+  "login" : {
+    "Address" : "address" ,
+    "City" : "city" ,
+    "Country" : "country" ,
+    "Email" : "email_address" ,
+    "First Name" : "first_name" ,
+    "Last Name" : "last_name" ,
+    "Login" : "login" ,
+    "Phone Number" : "phone_number" ,
+    "Post Code" : "index"
+  } ,
+  "walera_mos" : {
+    "address" : "/Start" ,
+    "city" : "/Start" ,
+    "country" : "/start" ,
+    "email_address" : "/Start" ,
+    "first_name" : "Lera" ,
+    "last_name" : "Moskaleva" ,
+    "login" : "walera_mos" ,
+    "phone_number" : "/Start" ,
+    "post_code" : "/Start"
+  } ,
+  "waleramos" : {
+    "address" : "Kashira Highway 80" ,
+    "city" : "Moscow" ,
+    "country" : "Russia" ,
+    "email_address" : "waleramoskaleva@ya.ru" ,
+    "first_name" : "Lera" ,
+    "last_name" : "Moskaleva" ,
+    "login" : "waleramos" ,
+    "phone_number" : "+79775804465" ,
+    "post_code" : "115569"
+  }
+}

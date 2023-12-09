@@ -36,6 +36,8 @@ def start(message):
 
         bot.send_message(message.chat.id, f'ERROR!\n\n Write again /start')
         bot.register_next_step_handler(message, start)
+
+
 @bot.message_handler(commands=['START, start'])
 def welcome(message):
     message_user = message.text
@@ -69,8 +71,10 @@ def welcome(message):
         bot.send_message(message.chat.id, w_answer, reply_markup=welcome_markup)
         bot.register_next_step_handler(message, welcome)
 
+
 # Function to choose a request in JSON
-@bot.message_handler(commands=["POST", "GET", 'post', 'get', 'DELETE', 'UPDATE', 'Delete', 'Update', 'delete', 'update', 'Post', 'Get'])
+@bot.message_handler(commands=["POST", "GET", 'post', 'get', 'DELETE', 'UPDATE', 'Delete', 'Update', 'delete', 'update',
+                               'Post', 'Get'])
 def choice_log_postget(message):
     users_choice = message.text
 
@@ -135,9 +139,9 @@ def choice_log_postget(message):
         bot.send_message(message.chat.id, 'Please, write again POST or GET or UPDATE or DELETE')
         bot.register_next_step_handler(message, choice_log_postget)
 
+
 # Function to choose Telegram Username as login or manually login
 def new_or_id(message, **kwargs):
-
     choice_user = message.text.lower()
     users_choice = kwargs.get('users_choice')
 
@@ -159,7 +163,7 @@ def new_or_id(message, **kwargs):
             bot.send_message(message.chat.id, f'Please, press the button for get permission to take your Telegram '
                                               f'username as a login in our base:', reply_markup=agree_markup)
 
-        # GET
+            # GET
             if users_choice in users_choice_list:
                 bot.register_next_step_handler(message, log_in)
 
@@ -232,7 +236,8 @@ def start_delete_process(message):
 
                 bot.send_message(message.chat.id,
                                  f"Login {login} wasn't found. Please choose 'GET' to try again, 'POST' to enter your "
-                                 "information or 'UPDATE' to change information in login's base or 'DELETE' to delete data")
+                                 "information or 'UPDATE' to change information in login's base or 'DELETE' to delete "
+                                 "data")
                 bot.register_next_step_handler(message, choice_log_postget)
 
 
@@ -264,7 +269,8 @@ def start_delete_process(message):
 
                 bot.send_message(message.chat.id, f"Your login {login} not found")
                 bot.send_message(message.chat.id, f"Please choose 'GET' to try again, 'POST' to enter your "
-                                                  "information or 'UPDATE' to change information in login's base or 'DELETE' to delete data")
+                                                  "information or 'UPDATE' to change information in login's base or "
+                                                  "'DELETE' to delete data")
 
                 bot.register_next_step_handler(message, choice_log_postget)
 
@@ -281,6 +287,7 @@ def start_delete_process(message):
         bot.send_message(message.chat.id, f'Please, choose again: “POST”, “GET", "UPDATE", "DELETE" to continue')
 
         bot.register_next_step_handler(message, choice_log_postget)
+
 
 # Function to delete a data in JSON
 def delete_user_data(message, **kwargs):
@@ -308,8 +315,8 @@ def delete_user_data(message, **kwargs):
         elif users_choice == 'No':
 
             bot.send_message(message.chat.id, f'Okay! Let me know if you want to delete the data')
-            bot.send_message(message.chat.id,
-                             f"Please, write the \"POST\", \"GET\", \"UPDATE\" or \"DELETE\" to continue working with me")
+            bot.send_message(message.chat.id, f"Please, write the \"POST\", \"GET\", \"UPDATE\" or \"DELETE\" "
+                                              f"to continue working with me")
 
             bot.register_next_step_handler(message, choice_log_postget)
 
@@ -385,6 +392,7 @@ def update_info(message):
         bot.send_message(message.chat.id, f'Please, try again and choose "POST" or "GET"')
         bot.register_next_step_handler(message, choice_log_postget)
 
+
 # Function to choose a stroke for UPDATE in JSON file
 def number_update_stroke(message, **kwargs):
     key_message = message.text.lower()
@@ -438,9 +446,9 @@ def number_update_stroke(message, **kwargs):
 
     bot.register_next_step_handler(message, update_key, login=login, key_message=key_message)
 
+
 # Function to UPDATE a data in JSON
 def update_key(message, **kwargs):
-
     key_update = message.text
     key_message = kwargs.get('key_message')
     login = kwargs.get('login')
@@ -453,7 +461,6 @@ def update_key(message, **kwargs):
     list6 = ['6', 'post', 'post code', 'code']
     list7 = ['7', 'email', 'email address']
     list8 = ['8', 'phone', 'phone number', 'number']
-
 
     try:
 
@@ -694,8 +701,8 @@ def log_post(message):
         if login in user_data_dict:
             #     and login in user_data_dict[user_id]):
 
-            bot.send_message(message.chat.id,
-                             "Login already exists. Please choose 'POST, GET, UPDATE, DELETE' to continue working with data.")
+            bot.send_message(message.chat.id, "Login already exists. Please choose 'POST, GET, UPDATE, DELETE' "
+                                              "to continue working with data.")
             bot.register_next_step_handler(message, choice_log_postget)
 
         elif login == r'✅':
@@ -703,8 +710,8 @@ def log_post(message):
             if login in user_data_dict:
                 #     and login in user_data_dict[user_id]):
 
-                bot.send_message(message.chat.id,
-                                 "Login already exists. Please choose 'POST, GET, UPDATE, DELETE' to continue working with data.")
+                bot.send_message(message.chat.id, "Login already exists. Please choose 'POST, GET, UPDATE, DELETE' "
+                                                  "to continue working with data.")
                 bot.register_next_step_handler(message, choice_log_postget)
 
             else:
@@ -737,6 +744,7 @@ def log_post(message):
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET" or "UPDATE" or "DELETE" ')
         bot.register_next_step_handler(message, choice_log_postget)
 
+
 def post_first(message, **kwargs):
     try:
 
@@ -759,6 +767,7 @@ def post_first(message, **kwargs):
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
+
 def post_last(message, **kwargs):
     try:
 
@@ -777,6 +786,7 @@ def post_last(message, **kwargs):
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
+
 
 def post_country(message, **kwargs):
     try:
@@ -799,6 +809,7 @@ def post_country(message, **kwargs):
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
+
 def post_city(message, **kwargs):
     try:
 
@@ -817,6 +828,7 @@ def post_city(message, **kwargs):
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
+
 
 def post_address(message, **kwargs):
     try:
@@ -840,6 +852,7 @@ def post_address(message, **kwargs):
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
+
 
 def post_index(message, **kwargs):
     try:
@@ -869,6 +882,7 @@ def post_index(message, **kwargs):
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
+
 def post_email(message, **kwargs):
     try:
 
@@ -886,6 +900,7 @@ def post_email(message, **kwargs):
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
+
 
 def post_phone(message, **kwargs):
     try:
@@ -920,7 +935,6 @@ def post_phone(message, **kwargs):
         bot.register_next_step_handler(message, choice_log_postget)
 
 
-
 # 1
 def format_user_data(user_data):
     try:
@@ -949,6 +963,7 @@ def format_user_data(user_data):
     except Exception as e:
         return f"Error formatting user data: {e}"
 
+
 # 2 (not used)
 def format_update_data(user_data):
     try:
@@ -974,7 +989,6 @@ def format_update_data(user_data):
 
     except Exception as e:
         return f"Error formatting user data: {e}"
-
 
 
 # def format_user_data2(user_data):

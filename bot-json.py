@@ -168,7 +168,7 @@ def new_or_id(message, **kwargs):
                 bot.register_next_step_handler(message, log_in)
 
             elif users_choice in users_choice_list1:
-                bot.register_next_step_handler(message, log_post)
+                bot.register_next_step_handler(message, log_name_in)
 
             elif users_choice in users_choice_list2:
                 bot.register_next_step_handler(message, update_info)
@@ -184,7 +184,7 @@ def new_or_id(message, **kwargs):
                 bot.register_next_step_handler(message, log_in)
 
             elif users_choice in users_choice_list1:
-                bot.register_next_step_handler(message, log_post)
+                bot.register_next_step_handler(message, log_name_in)
 
             elif users_choice in users_choice_list2:
                 bot.register_next_step_handler(message, update_info)
@@ -334,11 +334,15 @@ def delete_user_data(message, **kwargs):
 
         bot.register_next_step_handler(message, start_delete_process)
 
+# def update(message):
+    # login = message.text
+    # global login
 
-# Function to make a request UPDATE in JSON
+    # Function to make a request UPDATE in JSON
 def update_info(message):
     try:
 
+        # update()
         login = message.text
 
         if login in user_data_dict:
@@ -374,14 +378,14 @@ def update_info(message):
             else:
 
                 bot.send_message(message.chat.id,
-                                 "Login not found. Please choose 'GET' to try again or 'POST' to enter your "
+                                 "Login not found. \nPlease choose 'GET' to try again or 'POST' to enter your "
                                  "information.")
                 bot.register_next_step_handler(message, choice_log_postget)
 
         else:
 
             bot.send_message(message.chat.id,
-                             "Login not found. Please choose 'GET' to try again or 'POST' to enter your "
+                             "Login not found. \nPlease choose 'GET' to try again or 'POST' to enter your "
                              "information.")
             bot.register_next_step_handler(message, choice_log_postget)
 
@@ -636,6 +640,12 @@ def update_key(message, **kwargs):
                          f"Please, try again and choose \"POST\" or \"GET\" or \"UPDATE\" or \"DELETE\" to continue.")
         bot.register_next_step_handler(message, choice_log_postget)
 
+    # except Exception as e:
+    # bot.send_message(message.chat.id, f'ERROR: {e}')
+    # bot.send_message(message.chat.id, f'Please, try again and choose "POST" or "GET"')
+    #
+    # bot.register_next_step_handler(message, choice_log_postget)
+
 
 # Function to make a request GET in JSON and get data
 def log_in(message):
@@ -692,7 +702,13 @@ def log_in(message):
 
 
 # Function to make a request POST in JSON and save data
-def log_post(message):
+# def log_post(message):
+#     login = message.text.lower()
+
+
+    # Function to make a request POST in JSON and save data
+def log_name_in(message):
+
     try:
 
         login = message.text.lower()
@@ -935,7 +951,7 @@ def post_phone(message, **kwargs):
         bot.register_next_step_handler(message, choice_log_postget)
 
 
-# 1
+    # 1
 def format_user_data(user_data):
     try:
 

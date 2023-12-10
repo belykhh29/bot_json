@@ -106,7 +106,7 @@ def choice_log_postget(message):
         bot.send_message(message.chat.id, f'Choose the option how to post a data into base:',
                          reply_markup=give_signupid_markup)
 
-        bot.register_next_step_handler(message, new_or_id)
+        bot.register_next_step_handler(message, new_or_id, users_choice=users_choice)
 
     elif users_choice in user_choice_list2:
 
@@ -119,7 +119,7 @@ def choice_log_postget(message):
         bot.send_message(message.chat.id, f'Choose the option how to update a data in our base:',
                          reply_markup=give_signupid_markup)
 
-        bot.register_next_step_handler(message, new_or_id)
+        bot.register_next_step_handler(message, new_or_id, users_choice=users_choice)
 
     elif users_choice in user_choice_list3:
 
@@ -132,7 +132,7 @@ def choice_log_postget(message):
         bot.send_message(message.chat.id, f'Choose the option how to delete a data:',
                          reply_markup=give_signupid_markup)
 
-        bot.register_next_step_handler(message, new_or_id)
+        bot.register_next_step_handler(message, new_or_id, users_choice=users_choice)
 
     else:
         bot.send_message(message.chat.id, 'ERROR: Invalid choice')
@@ -168,7 +168,7 @@ def new_or_id(message, **kwargs):
                 bot.register_next_step_handler(message, log_in)
 
             elif users_choice in users_choice_list1:
-                bot.register_next_step_handler(message, log_name_in)
+                bot.register_next_step_handler(message, log_post)
 
             elif users_choice in users_choice_list2:
                 bot.register_next_step_handler(message, update_info)
@@ -184,7 +184,7 @@ def new_or_id(message, **kwargs):
                 bot.register_next_step_handler(message, log_in)
 
             elif users_choice in users_choice_list1:
-                bot.register_next_step_handler(message, log_name_in)
+                bot.register_next_step_handler(message, log_post)
 
             elif users_choice in users_choice_list2:
                 bot.register_next_step_handler(message, update_info)
@@ -453,6 +453,7 @@ def number_update_stroke(message, **kwargs):
 
 # Function to UPDATE a data in JSON
 def update_key(message, **kwargs):
+    global format_data
     key_update = message.text
     key_message = kwargs.get('key_message')
     login = kwargs.get('login')
@@ -700,28 +701,45 @@ def log_in(message):
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
-
 # Function to make a request POST in JSON and save data
 # def log_post(message):
 #     login = message.text.lower()
 
 
     # Function to make a request POST in JSON and save data
-def log_name_in(message):
+def log_post(message):
+    login = message.text.lower()
 
     try:
 
-        login = message.text.lower()
-        # print(f"DEBUG: log_post - login: {login}")
+        print(f"DEBUG: log_post - login: {login}")
 
-        if login in user_data_dict:
-            #     and login in user_data_dict[user_id]):
 
-            bot.send_message(message.chat.id, "Login already exists. Please choose 'POST, GET, UPDATE, DELETE' "
-                                              "to continue working with data.")
-            bot.register_next_step_handler(message, choice_log_postget)
+        if login !=  r'✅':
+
+            if login in user_data_dict:
+                #     and login in user_data_dict[user_id]):
+
+                bot.send_message(message.chat.id, "Login already exists. Please choose 'POST, GET, UPDATE, DELETE' "
+                                                  "to continue working with data.")
+                bot.register_next_step_handler(message, choice_log_postget)
+
+            else:
+                # Initialize a new user entry
+                user_data_dict[login] = {'login': login}
+
+                bot.send_message(message.chat.id,
+                                 f"Great! Your login is {login}\n\n Please, let us know your first name, write it to me")
+                bot.register_next_step_handler(message, post_first, login=login)
+
+                # return login
+
 
         elif login == r'✅':
+
+            username = message.from_user.username
+            login = username
+
 
             if login in user_data_dict:
                 #     and login in user_data_dict[user_id]):
@@ -740,19 +758,10 @@ def log_name_in(message):
                                  f"Great! Your login is {login}\n Please, write the first name of user to continue")
                 bot.register_next_step_handler(message, post_first, login=login)
 
-                return login
-
-        else:
-            # Initialize a new user entry
-            user_data_dict[login] = {'login': login}
-
-            bot.send_message(message.chat.id,
-                             f"Great! Your login is {login}\n\n Please, let us know your first name, write it to me")
-            bot.register_next_step_handler(message, post_first, login=login)
-
-            return login
+                # return login
 
     except Exception as e:
+        print(f"DEBUG: log_post - login: {login}")
 
         # print(f"DEBUG: log_post - Exception: {e}")
 
@@ -931,7 +940,13 @@ def post_phone(message, **kwargs):
 
         with open('user_data.json', 'w') as file:
             json.dump(user_data_dict, file)
-            requests.post('http://127.0.0.1:5000', file)
+
+            url_post = 'http://127.0.0.1:5000/users'
+            # post_response_json = response.post.json()
+
+            r = requests.post(url_post, json=user_data_dict)
+            print(r.json)
+            print(r.status_code)
 
         # bot.send_message(chat_id, "Data successfully saved!")
 
@@ -952,6 +967,8 @@ def post_phone(message, **kwargs):
 
 
     # 1
+
+
 def format_user_data(user_data):
     try:
 

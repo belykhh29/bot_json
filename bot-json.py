@@ -38,7 +38,7 @@ def start(message):
         bot.register_next_step_handler(message, start)
 
 
-@bot.message_handler(commands=['START, start'])
+@bot.message_handler(commands=['START', 'start'])
 def welcome(message):
     message_user = message.text
     user_m_list = ['START', 'start']
@@ -334,11 +334,12 @@ def delete_user_data(message, **kwargs):
 
         bot.register_next_step_handler(message, start_delete_process)
 
-# def update(message):
-    # login = message.text
-    # global login
 
-    # Function to make a request UPDATE in JSON
+# def update(message):
+# login = message.text
+# global login
+
+# Function to make a request UPDATE in JSON
 def update_info(message):
     try:
 
@@ -701,12 +702,13 @@ def log_in(message):
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
+
 # Function to make a request POST in JSON and save data
 # def log_post(message):
 #     login = message.text.lower()
 
 
-    # Function to make a request POST in JSON and save data
+# Function to make a request POST in JSON and save data
 def log_post(message):
     login = message.text.lower()
 
@@ -714,8 +716,7 @@ def log_post(message):
 
         print(f"DEBUG: log_post - login: {login}")
 
-
-        if login !=  r'✅':
+        if login != r'✅':
 
             if login in user_data_dict:
                 #     and login in user_data_dict[user_id]):
@@ -739,7 +740,6 @@ def log_post(message):
 
             username = message.from_user.username
             login = username
-
 
             if login in user_data_dict:
                 #     and login in user_data_dict[user_id]):
@@ -964,7 +964,6 @@ def post_phone(message, **kwargs):
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
-
 
     # 1
 

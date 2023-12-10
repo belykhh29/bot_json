@@ -941,12 +941,12 @@ def post_phone(message, **kwargs):
         with open('user_data.json', 'w') as file:
             json.dump(user_data_dict, file)
 
-            url_post = 'http://127.0.0.1:5000/users'
-            # post_response_json = response.post.json()
+        url_post = 'http://127.0.0.1:5000/save_users'
+        # post_response_json = response.post.json()
 
-            r = requests.post(url_post, json=user_data_dict)
-            print(r.json)
-            print(r.status_code)
+        r = requests.post(url_post, json=user_data_dict)
+        print(r.json)
+        print(r.status_code)
 
         # bot.send_message(chat_id, "Data successfully saved!")
 

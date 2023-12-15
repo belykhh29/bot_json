@@ -710,6 +710,7 @@ def log_in(message):
 
 # Function to make a request POST in JSON and save data
 def log_post(message):
+
     login = message.text.lower()
 
     try:
@@ -941,7 +942,8 @@ def post_phone(message, **kwargs):
         with open('user_data.json', 'w') as file:
             json.dump(user_data_dict, file)
 
-        url_post = 'http://127.0.0.1:5000/save_users'
+        url_post1 = 'http://127.0.0.1:5000/save_users'
+        url_post = 'http://127.0.0.1:5000/json-example'
         # post_response_json = response.post.json()
 
         r = requests.post(url_post, json=user_data_dict)

@@ -22,19 +22,21 @@ def json_example():
         if request.method == 'POST':
 
             data = request.get_json()  # Get JSON data from the request
-            with open('kek.json', 'r') as file:
+            with open('kek.json', 'w') as file:
                 json.dump(data, file)  # Write JSON data to 'kek.json'
+
             return jsonify({"message": "Data successfully saved!"})
 
         else:
 
             data = request.get_json()
             with open('kek.json', 'w') as file:
-                json.load(data, file)
+                json.dump(data, file)  # Write JSON data to 'kek.json'
 
-        return jsonify(f'{data}')
+            return jsonify(f'{data}')
 
     except Exception as e:
+
         return jsonify({"error": str(e)}), 500
 
 

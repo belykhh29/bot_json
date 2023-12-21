@@ -2,6 +2,9 @@ import telebot
 import json
 import requests
 
+from m_requests.f_post import json_example
+
+
 # from bot_modules import form_data
 # from form_data import format_user_data1, format_update_data1
 
@@ -660,6 +663,13 @@ def log_in(message):
             # Display user information
             format_data = format_user_data(user_data)
 
+            url_post = 'http://127.0.0.1:5000/json-example'
+            # post_response_json = response.post.json()
+
+            r = requests.get(url_post, json=user_data)
+            print(r.json)
+            print(r.status_code)
+
             bot.send_message(message.chat.id, f"Here's {login}'s data:\n\n{format_data}")
             bot.send_message(message.chat.id,
                              f'If you want to continue working on our base, write POST or GET or UPDATE or DELETE')
@@ -675,6 +685,25 @@ def log_in(message):
                 user_data = user_data_dict[login]
                 # Display user information
                 format_data = format_user_data(user_data)
+
+                try:
+
+                    url_get = 'http://127.0.0.1:5000/json-example'
+                    # post_response_json = response.post.json()
+
+                    r = requests.get(url_get, json=user_data)
+                    print(r.json())
+                    print(r.status_code)
+
+                    # s = json_example()
+                    # print(s)
+                    server_response = r.json()
+
+
+                except Exception as e:
+                    print('fuck you')
+
+                bot.send_message(message.chat.id, f'Server Response: {server_response}')
 
                 bot.send_message(message.chat.id, f"Here's yours, {login}, data:{format_data}")
                 bot.send_message(message.chat.id,
@@ -701,7 +730,6 @@ def log_in(message):
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
-
 
 # Function to make a request POST in JSON and save data
 # def log_post(message):
@@ -937,7 +965,7 @@ def post_phone(message, **kwargs):
 
         user_data_dict.setdefault(login, {})
 
-        user_data_dict[login]['phone_number'] = message.text
+        user_data = user_data_dict[login]['phone_number'] = message.text
 
         with open('user_data.json', 'w') as file:
             json.dump(user_data_dict, file)

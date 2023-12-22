@@ -2,11 +2,10 @@ import telebot
 import json
 import requests
 
-from m_requests.f_post import json_example
-
-
+# from m_requests.f_post import json_example
 # from bot_modules import form_data
 # from form_data import format_user_data1, format_update_data1
+
 
 bot = telebot.TeleBot('6370996369:AAEqn8epM8aKiMM9zzAEHYSjOkz0K_PU5nE')
 user_data_dict = {}
@@ -338,9 +337,6 @@ def delete_user_data(message, **kwargs):
         bot.register_next_step_handler(message, start_delete_process)
 
 
-# def update(message):
-# login = message.text
-# global login
 
 # Function to make a request UPDATE in JSON
 def update_info(message):
@@ -645,12 +641,6 @@ def update_key(message, **kwargs):
                          f"Please, try again and choose \"POST\" or \"GET\" or \"UPDATE\" or \"DELETE\" to continue.")
         bot.register_next_step_handler(message, choice_log_postget)
 
-    # except Exception as e:
-    # bot.send_message(message.chat.id, f'ERROR: {e}')
-    # bot.send_message(message.chat.id, f'Please, try again and choose "POST" or "GET"')
-    #
-    # bot.register_next_step_handler(message, choice_log_postget)
-
 
 # Function to make a request GET in JSON and get data
 def log_in(message):
@@ -703,7 +693,7 @@ def log_in(message):
                 except Exception as e:
                     print('fuck you')
 
-                bot.send_message(message.chat.id, f'Server Response: {server_response}')
+                # bot.send_message(message.chat.id, f'Server Response: {server_response}')
 
                 bot.send_message(message.chat.id, f"Here's yours, {login}, data:{format_data}")
                 bot.send_message(message.chat.id,
@@ -913,18 +903,10 @@ def post_index(message, **kwargs):
 
         login = kwargs.get('login')
 
-        # login = log_post()
-        # country = post_country()
-        # city = post_city()
-        # address = post_address()
-
         index = message.text.lower()
 
         user_data_dict.setdefault(login, {})
         user_data_dict[login]['post_code'] = message.text
-
-        # bot.send_message(chat_id, f"Great! Your full address is {country.title()}, {city.title()},\n{address.title(
-        # )}, {index.title()}\n\n Now let us know your email address, please " f"write it")
 
         bot.send_message(message.chat.id,
                          f"Great! Your post code is  {index.title()}\n\n Now let us know your email address, please "
@@ -985,9 +967,6 @@ def post_phone(message, **kwargs):
         bot.send_message(message.chat.id, f"Choose again, POST or GET to continue.")
         bot.register_next_step_handler(message, choice_log_postget)
 
-        # return choice_log_postget
-        # bot.register_message_handler(message, choice_log_POSTGET)
-        # bot.register_next_step_handler(message, post_email)
 
     except Exception as e:
 
@@ -1052,11 +1031,5 @@ def format_update_data(user_data):
     except Exception as e:
         return f"Error formatting user data: {e}"
 
-
-# def format_user_data2(user_data):
-#     format_user_data1(user_data)
-#
-# def format_update_data2(user_data):
-#     format_update_data1(user_data)
 
 bot.infinity_polling()

@@ -4,7 +4,7 @@ import json
 import requests
 import re
 
-bot = telebot.TeleBot('6370996369:AAEqn8epM8aKiMM9zzAEHYSjOkz0K_PU5nE')
+bot = telebot.TeleBot('6868712465:AAGLWXNE7FlyUMln-LYAQzXHvIkZShyAOS4')
 user_data_dict = {}
 
 class ValidationError(Exception):

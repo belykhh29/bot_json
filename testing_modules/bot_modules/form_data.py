@@ -3,7 +3,7 @@ import json
 user_data_dict = {}
 
 try:
-    with open('../user_data.json', 'r') as file:
+    with open('../../user_data.json', 'r') as file:
         user_data_dict = json.load(file)
 except FileNotFoundError:
     user_data_dict = {}

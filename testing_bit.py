@@ -1,20 +1,15 @@
-import pytest
+# import pytest
 import telebot
 import json
 import requests
 import re
 
-bot = telebot.TeleBot('6868712465:AAGLWXNE7FlyUMln-LYAQzXHvIkZShyAOS4')
+bot = telebot.TeleBot('6588357259:AAFCIOGvypE0eRDVQaWplId7XS2P2tCUUoU')
 user_data_dict = {}
 
 class ValidationError(Exception):
     """Raises when password is not valid."""
-    # pattern1 = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$'
-    # pattern2 = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$'
-
-
 pattern1 = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$'
-pattern2 = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$'
 
 # Load existing user data from JSON file
 try:
@@ -301,7 +296,7 @@ def start_delete_process(message):
 def delete_user_data(message, **kwargs):
     try:
         login_to_delete = kwargs.get('login')
-
+        user_data = user_data_dict[login_to_delete]
         users_choice = message.text
 
         if users_choice == 'Yes':
@@ -316,6 +311,13 @@ def delete_user_data(message, **kwargs):
 
             bot.send_message(message.chat.id, f"User data for login '{login_to_delete}' has been deleted.")
             bot.send_message(message.chat.id, "Come back with commands: /start, POST, GET, UPDATE, DELETE")
+
+            url_post = 'http://127.0.0.1:5000/json-example'
+            # post_response_json = response.post.json()
+
+            r = requests.delete(url_post, json=user_data)
+            print(r.json)
+            print(r.status_code)
 
             bot.register_next_step_handler(message, choice_log_postget)
 
@@ -631,13 +633,19 @@ def update_key(message, **kwargs):
             bot.send_message(message.chat.id, f'Come back with commands: /start, POST, GET, UPDATE or DELETE')
             bot.register_next_step_handler(message, choice_log_postget)
 
-
-
         else:
 
             bot.send_message(message.chat.id, f"Sorry, but I can't recognize your text. Please try again")
             bot.send_message(message.chat.id, f'Please, try again and choose "POST" or "GET" or "UPDATE" or "DELETE"')
             bot.register_next_step_handler(message, choice_log_postget)
+
+        url_post = 'http://127.0.0.1:5000/json-example'
+        # post_response_json = response.post.json()
+
+        r = requests.put(url_post, json=user_data)
+        print(r.json)
+        print(r.status_code)
+
 
     except Exception as e:
 
@@ -679,7 +687,6 @@ def log_pass(message):
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
-
 # Function to make a request GET in JSON and get data
 def log_in(message, **kwargs):
     try:
@@ -714,7 +721,6 @@ def log_in(message, **kwargs):
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
-
 
 
 # Function to make a request POST in JSON and save data
@@ -819,7 +825,6 @@ def post_pass(message, pattern, **kwargs):
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, 'Please, choose again: "POST" or "GET"')
         bot.register_next_step_handler(message, choice_log_postget)
-
 
 def post_first(message, **kwargs):
     try:

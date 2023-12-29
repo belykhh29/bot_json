@@ -1,4 +1,3 @@
-
 import json
 from flask import Flask, request, jsonify
 app = Flask(__name__)
@@ -35,22 +34,6 @@ def json_example():
 
             except Exception as e:
                 return jsonify({"error": str(e)}), 500
-        # elif request.method == 'DEL':
-        #
-        #     data = request.get_json() # Get JSON data from the request
-        #     login = data.get('login')
-        #
-        #     # Check for required data
-        #     # if login:
-        #     if login in user_data_dict:
-        #         del user_data_dict[login]
-        #         with open('kek.json', 'w') as file:
-        #             json.dump(user_data_dict, file)
-        #         return jsonify({"message": "Data successfully deleted!"})
-        #     else:
-        #         return jsonify({"error": f"User with login {login} not found"}), 404
-        #     # else:
-        #     #     return jsonify({"error": "Missing user login"}), 400
 
         elif request.method == 'DELETE':
             try:
@@ -120,9 +103,42 @@ def json_example():
 
 
 
-
 if __name__ == '__main__':
    app.run(debug = True)
 
 
 
+#PREVIOUS CODE
+import json
+from flask import Flask, request, jsonify
+app = Flask(__name__)
+
+user_data_dict = {}
+
+@app.route('/json-example', methods=['POST', 'GET', 'DELETE', 'PUT'])
+def json_example():
+    try:
+
+        if request.method == 'POST':
+
+            data = request.get_json()  # Get JSON data from the request
+            with open('kek.json', 'w') as file:
+                json.dump(data, file)  # Write JSON data to 'kek.json'
+
+            return jsonify({"message": "Data successfully saved!"})
+
+        else:
+
+            data = request.get_json()
+            with open('kek.json', 'w') as file:
+                json.dump(data, file)  # Write JSON data to 'kek.json'
+
+            return jsonify(f'{data}')
+
+    except Exception as e:
+
+        return jsonify({"error": str(e)}), 500
+
+
+if __name__ == '__main__':
+   app.run(debug = True)

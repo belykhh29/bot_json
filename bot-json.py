@@ -1,20 +1,14 @@
-import pytest
 import telebot
 import json
 import requests
 import re
 
-bot = telebot.TeleBot('6370996369:AAEqn8epM8aKiMM9zzAEHYSjOkz0K_PU5nE')
+bot = telebot.TeleBot('6588357259:AAFCIOGvypE0eRDVQaWplId7XS2P2tCUUoU')
 user_data_dict = {}
 
 class ValidationError(Exception):
     """Raises when password is not valid."""
-    # pattern1 = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$'
-    # pattern2 = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$'
-
-
 pattern1 = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$'
-pattern2 = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$'
 
 # Load existing user data from JSON file
 try:
@@ -146,7 +140,6 @@ def choice_log_postget(message):
         bot.send_message(message.chat.id, 'ERROR: Invalid choice')
         bot.send_message(message.chat.id, 'Please, write again POST or GET or UPDATE or DELETE')
         bot.register_next_step_handler(message, choice_log_postget)
-
 
 # Function to choose Telegram Username as login or manually login
 def new_or_id(message, **kwargs):
@@ -296,12 +289,11 @@ def start_delete_process(message):
 
         bot.register_next_step_handler(message, choice_log_postget)
 
-
 # Function to delete a data in JSON
 def delete_user_data(message, **kwargs):
     try:
         login_to_delete = kwargs.get('login')
-
+        user_data = user_data_dict[login_to_delete]
         users_choice = message.text
 
         if users_choice == 'Yes':
@@ -316,6 +308,10 @@ def delete_user_data(message, **kwargs):
 
             bot.send_message(message.chat.id, f"User data for login '{login_to_delete}' has been deleted.")
             bot.send_message(message.chat.id, "Come back with commands: /start, POST, GET, UPDATE, DELETE")
+
+            url_delete = f'http://127.0.0.1:5000/json-example?login={login_to_delete}'
+            r = requests.delete(url_delete)
+            print(r.status_code)
 
             bot.register_next_step_handler(message, choice_log_postget)
 
@@ -341,6 +337,7 @@ def delete_user_data(message, **kwargs):
         bot.send_message(message.chat.id, "Please, try again with commands: /start, POST, GET, UPDATE, DELETE")
 
         bot.register_next_step_handler(message, start_delete_process)
+
 
 
 # Function to make a request UPDATE in JSON
@@ -401,7 +398,6 @@ def update_info(message):
         bot.send_message(message.chat.id, f'Please, try again and choose "POST" or "GET"')
         bot.register_next_step_handler(message, choice_log_postget)
 
-
 # Function to choose a stroke for UPDATE in JSON file
 def number_update_stroke(message, **kwargs):
     key_message = message.text.lower()
@@ -454,7 +450,6 @@ def number_update_stroke(message, **kwargs):
         bot.send_message(message.chat.id, answer)
 
     bot.register_next_step_handler(message, update_key, login=login, key_message=key_message)
-
 
 # Function to UPDATE a data in JSON
 def update_key(message, **kwargs):
@@ -631,13 +626,19 @@ def update_key(message, **kwargs):
             bot.send_message(message.chat.id, f'Come back with commands: /start, POST, GET, UPDATE or DELETE')
             bot.register_next_step_handler(message, choice_log_postget)
 
-
-
         else:
 
             bot.send_message(message.chat.id, f"Sorry, but I can't recognize your text. Please try again")
             bot.send_message(message.chat.id, f'Please, try again and choose "POST" or "GET" or "UPDATE" or "DELETE"')
             bot.register_next_step_handler(message, choice_log_postget)
+
+        url_post = 'http://127.0.0.1:5000/json-example'
+        # post_response_json = response.post.json()
+
+        r = requests.put(url_post, json=user_data_dict)
+        print(r.json)
+        print(r.status_code)
+
 
     except Exception as e:
 
@@ -645,6 +646,7 @@ def update_key(message, **kwargs):
         bot.send_message(message.chat.id,
                          f"Please, try again and choose \"POST\" or \"GET\" or \"UPDATE\" or \"DELETE\" to continue.")
         bot.register_next_step_handler(message, choice_log_postget)
+
 
 
 def log_pass(message):
@@ -679,42 +681,41 @@ def log_pass(message):
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
-
 # Function to make a request GET in JSON and get data
 def log_in(message, **kwargs):
     try:
         user_pass = message.text
         login = kwargs.get('login')
 
-        if login in user_data_dict and 'password' in user_data_dict[login] and user_pass == user_data_dict[login]['password']:
-
+        if login in user_data_dict and 'password' in user_data_dict[login] and user_pass == user_data_dict[login][
+            'password']:
             user_data = user_data_dict[login]
             # Display user information
             format_data = format_user_data(user_data)
 
-            url_post = 'http://127.0.0.1:5000/json-example'
-            # post_response_json = response.post.json()
+            url_get = f'http://127.0.0.1:5000/json-example?login={login}'  # Modify this line
+            r = requests.get(url_get)
 
-            r = requests.get(url_post, json=user_data)
-            print(r.json)
-            print(r.status_code)
+            if r.status_code == 200:
+                # If the GET request is successful, print the data
+                print(r.json())
+                bot.send_message(message.chat.id, f"Here's {login}'s data:\n\n{format_data}")
+            else:
+                # If there is an error in the GET request, print the error message
+                print(r.json())
+                bot.send_message(message.chat.id, f"Error retrieving {login}'s data.")
 
-            bot.send_message(message.chat.id, f"Here's {login}'s data:\n\n{format_data}")
             bot.send_message(message.chat.id,
                              f'If you want to continue working on our base, write POST or GET or UPDATE or DELETE')
             bot.register_next_step_handler(message, choice_log_postget)
-
         else:
-
             bot.send_message(message.chat.id,
                              f"Password incorrect. Please, try again to write the password for {login}")
             bot.register_next_step_handler(message, log_in, login=login)
-
     except Exception as e:
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
-
 
 
 # Function to make a request POST in JSON and save data
@@ -820,7 +821,6 @@ def post_pass(message, pattern, **kwargs):
         bot.send_message(message.chat.id, 'Please, choose again: "POST" or "GET"')
         bot.register_next_step_handler(message, choice_log_postget)
 
-
 def post_first(message, **kwargs):
     try:
 
@@ -843,7 +843,6 @@ def post_first(message, **kwargs):
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
-
 def post_last(message, **kwargs):
     try:
 
@@ -862,7 +861,6 @@ def post_last(message, **kwargs):
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
-
 
 def post_country(message, **kwargs):
     try:
@@ -885,7 +883,6 @@ def post_country(message, **kwargs):
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
-
 def post_city(message, **kwargs):
     try:
 
@@ -904,7 +901,6 @@ def post_city(message, **kwargs):
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
-
 
 def post_address(message, **kwargs):
     try:
@@ -929,7 +925,6 @@ def post_address(message, **kwargs):
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
-
 def post_index(message, **kwargs):
     try:
 
@@ -950,7 +945,6 @@ def post_index(message, **kwargs):
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
-
 def post_email(message, **kwargs):
     try:
 
@@ -969,53 +963,40 @@ def post_email(message, **kwargs):
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
-
 def post_phone(message, **kwargs):
     try:
-
         login = kwargs.get('login')
-
         phone_number = message.text.lower()
 
-        user_data_dict.setdefault(login, {})
+        user_data_dict[login]['phone_number'] = message.text
 
-        user_data = user_data_dict[login]['phone_number'] = message.text
+        user_data = user_data_dict.get(login, {})
 
         with open('user_data.json', 'w') as file:
             json.dump(user_data_dict, file)
 
-        url_post1 = 'http://127.0.0.1:5000/save_users'
         url_post = 'http://127.0.0.1:5000/json-example'
-        # post_response_json = response.post.json()
 
-        r = requests.post(url_post, json=user_data_dict)
+        r = requests.post(url_post, json={login: user_data})
         print(r.json)
         print(r.status_code)
-
-        # bot.send_message(chat_id, "Data successfully saved!")
 
         bot.send_message(message.chat.id,
                          f'Great! Your phone number is {phone_number}\n\nData successfully saved!')
         bot.send_message(message.chat.id, f"Choose again, POST or GET to continue.")
         bot.register_next_step_handler(message, choice_log_postget)
 
-
     except Exception as e:
-
         bot.reply_to(message, f'ERROR: {e}')
         bot.send_message(message.chat.id, f'Please, choose again: “POST” or “GET')
         bot.register_next_step_handler(message, choice_log_postget)
 
-    # 1
 
 
 def format_user_data(user_data):
     try:
-
-        if isinstance(user_data_dict, dict) and user_data_dict:
-
+        if isinstance(user_data, dict) and user_data:
             login = user_data['login']
-
             data = (f'\n\n'
                     f'Login: {login}\n\n'
                     f'1. First Name: {user_data["first_name"]}\n'
@@ -1026,42 +1007,12 @@ def format_user_data(user_data):
                     f'6. Post Code: {user_data["post_code"]}\n'
                     f'7. Email: {user_data["email_address"]}\n'
                     f'8. Phone Number: {user_data["phone_number"]}')
-
-            # bot.send_message(message.chat.id, f'If you want to continue working on the database, write /start again')
-            return data
-
-        else:
-            return "User data not found or invalid."
-
-    except Exception as e:
-        return f"Error formatting user data: {e}"
-
-
-# 2 (not used)
-def format_update_data(user_data):
-    try:
-
-        if isinstance(user_data_dict, dict) and user_data_dict:
-
-            login = user_data['login']
-
-            data = (f'Here\'s your new data:\n'
-                    f'1. Login: {login}\n'
-                    f'2. First Name: {user_data["first_name"]}\n'
-                    f'3. Last Name: {user_data["last_name"]}\n'
-                    f'4. Country: {user_data["country"]}\n'
-                    f'5. City: {user_data["city"]}\n'
-                    f'6. Address: {user_data["address"]}\n'
-                    f'7. Post Code: {user_data["post_code"]}\n'
-                    f'8. Email: {user_data["email_address"]}\n'
-                    f'9. Phone Number: {user_data["phone_number"]}')
-
             return data
         else:
             return "User data not found or invalid."
-
     except Exception as e:
         return f"Error formatting user data: {e}"
+
 
 
 bot.infinity_polling()
